@@ -39,22 +39,22 @@ GROUP BY an.name;
 
 --все исполнители, которые не выпустили альбомы в 2020 году
 
-SELECT name_alias FROM performers 
-JOIN performersalbum p2 USING(performer_id)
-JOIN album_name an USING(album_name_id)
-WHERE year_of_production != 2020
-GROUP BY name_alias;
+SELECT DISTINCT name_alias FROM performers
+WHERE name_alias NOT IN (
+	SELECT name_alias FROM performers
+	JOIN performersalbum p2 USING(performer_id)
+	JOIN album_name an USING(album_name_id)
+	WHERE year_of_production = 2020);
 
 --названия сборников, в которых присутствует конкретный исполнитель
 
-SELECT c.name FROM collection c 
+SELECT DISTINCT c.name FROM collection c 
 JOIN collectiontrack USING(collection_id)
 JOIN track_name USING(track_name_id)
 JOIN album_name USING(album_name_id)
 JOIN performersalbum USING(album_name_id)
 JOIN performers USING(performer_id)
-WHERE name_alias ILIKE 'Bob Marley'
-GROUP BY c.name;
+WHERE name_alias ILIKE 'Bob Marley';
 
 --название альбомов, в которых присутствуют исполнители более 1 жанра
 
